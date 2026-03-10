@@ -43,7 +43,7 @@ def main():
     with st.sidebar:
         # March 2026 Stable Models
         model_choice = st.selectbox("Select Intelligence Level", 
-                                    ["gemini-2.0-flash-lite", "gemini-2.0-flash"])
+                                    ["gemini-2.5-flash-lite", "gemini-2.5-flash"])
         st.write("---")
         st.caption("Ensures compliance with current Indian Labour Codes.")
 
@@ -72,4 +72,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
