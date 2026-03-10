@@ -1,14 +1,12 @@
 import streamlit as st
 from google import genai
-from google.genai import types
 
 # 1. Page Config
 st.set_page_config(page_title="Fair-Work Legal Navigator 2026", layout="wide")
 
 # 2. Initialize the New 2026 Client
 # Replace with your actual key or use st.secrets["GEMINI_API_KEY"]
-API_KEY = st.secrets["GEMINI_API_KEY"]
-client = genai.Client(api_key=API_KEY)
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 # 3. Modern Analysis Function
 def run_legal_audit(contract_text, model_name):
@@ -68,4 +66,5 @@ def main():
                 st.error(f"Audit failed. Error: {e}")
 
 if __name__ == "__main__":
+
     main()
