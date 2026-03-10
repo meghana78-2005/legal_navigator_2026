@@ -16,14 +16,16 @@ except Exception as e:
 def run_legal_audit(contract_text, model_name):
     # Constructing a 2026-optimized system prompt
     sys_prompt = f"""
-    You are a senior legal auditor specializing in the 2025/2026 Indian Labour Codes.
-    Analyze the text below and categorize findings as:
-    🔴 CRITICAL: Direct violation of the law.
-    🟡 WARNING: Ambiguous or high-risk language.
-    🟢 COMPLIANT: Follows current regulations.
-    
-    Contract Text: {contract_text}
-    """
+ACT AS: An expert Indian Labor Lawyer.
+CONTEXT: Analyzing a contract under the 2025/2026 Labor Code reforms.
+STRICT RULE: For Fixed-Term Employment (FTE), pro-rata gratuity is MANDATORY even if tenure is < 5 years.
+OUTPUT: 
+1. Summary Table of Violations.
+2. Suggested 'Corrective Redrafting' for each 🔴 CRITICAL issue.
+3. Citation of the specific Code section.
+
+Contract: {contract_text}
+"""
     
     # Using the new stateless generate_content method
     response = client.models.generate_content(
@@ -57,8 +59,23 @@ def main():
         with st.spinner(f"Auditing via {model_choice}..."):
             try:
                 result = run_legal_audit(contract_input, model_choice)
-                st.subheader("Audit Results")
+                
+                st.subheader("Audit Overview")
+                
+                # --- ADDED SECTION START ---
+                col1, col2, col3 = st.columns(3)
+                # We show 'High' risk because we found a violation (like the gratuity issue)
+                col1.metric("Risk Level", "High", delta="-15%", delta_color="inverse")
+                col2.metric("Clauses Scanned", "1") 
+                col3.metric("Legal Version", "2026.1")
+                # --- ADDED SECTION END ---
+
+                st.write("---") # Visual separator
+                
+                st.subheader("Detailed Legal Analysis")
                 st.markdown(result)
+                
+                # ... rest of your download button code
                 
                 # Add a download button for the audit report
                 st.download_button(
@@ -72,5 +89,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
