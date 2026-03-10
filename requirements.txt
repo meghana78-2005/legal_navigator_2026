@@ -1,3 +1,4 @@
 streamlit
-from google import genai
+google-genai
 tenacity
+
