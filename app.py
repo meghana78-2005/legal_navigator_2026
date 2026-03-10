@@ -1,12 +1,16 @@
 import streamlit as st
 from google import genai
+from google.genai import types  # <--- THIS WAS THE MISSING PIECE
 
 # 1. Page Config
 st.set_page_config(page_title="Fair-Work Legal Navigator 2026", layout="wide")
 
 # 2. Initialize the New 2026 Client
-# Replace with your actual key or use st.secrets["GEMINI_API_KEY"]
-client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+# Make sure your GitHub secrets or Streamlit Cloud secrets have "GEMINI_API_KEY"
+try:
+    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+except Exception as e:
+    st.error("API Key missing or invalid. Check your Streamlit Secrets.")
 
 # 3. Modern Analysis Function
 def run_legal_audit(contract_text, model_name):
@@ -39,7 +43,7 @@ def main():
     with st.sidebar:
         # March 2026 Stable Models
         model_choice = st.selectbox("Select Intelligence Level", 
-                                    ["gemini-2.5-flash-lite", "gemini-2.5-flash"])
+                                    ["gemini-2.0-flash-lite", "gemini-2.0-flash"])
         st.write("---")
         st.caption("Ensures compliance with current Indian Labour Codes.")
 
@@ -55,7 +59,8 @@ def main():
                 result = run_legal_audit(contract_input, model_choice)
                 st.subheader("Audit Results")
                 st.markdown(result)
-		        # Add a download button for the audit report
+                
+                # Add a download button for the audit report
                 st.download_button(
                     label="Download Audit Report",
                     data=result,
@@ -66,5 +71,4 @@ def main():
                 st.error(f"Audit failed. Error: {e}")
 
 if __name__ == "__main__":
-
     main()
